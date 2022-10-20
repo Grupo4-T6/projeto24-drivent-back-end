@@ -18,6 +18,8 @@ model User {
   updatedAt  DateTime     @updatedAt
   Session    Session[]
   Enrollment Enrollment[]
+
+  @@map("user")
 }
 
 model Session {
@@ -27,6 +29,8 @@ model Session {
   token     String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@map("session")
 }
 
 model Event {
@@ -38,6 +42,8 @@ model Event {
   endsAt             DateTime
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
+
+  @@map("event")
 }
 
 model Enrollment {
@@ -49,8 +55,11 @@ model Enrollment {
   userId    Int       @unique
   User      User      @relation(fields: [userId], references: [id])
   Address   Address[]
+  Payment   Payment[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+
+  @@map("enrollment")
 }
 
 model Address {
@@ -66,4 +75,22 @@ model Address {
   Enrollment    Enrollment @relation(fields: [enrollmentId], references: [id])
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
+
+  @@map("address")
+}
+
+model Payment {
+  id           Int          @id @default(autoincrement())
+  enrollmentId Int          @unique
+  Enrollment   Enrollment   @relation(fields: [enrollmentId], references: [id])
+  Modality     ModalityType
+  Booking      Boolean      @default(false)
+  isFinished   Boolean      @default(false)
+
+  @@map("payment")
+}
+
+enum ModalityType {
+  Presencial
+  Online
 }
