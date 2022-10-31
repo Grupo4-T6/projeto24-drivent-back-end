@@ -1,30 +1,30 @@
 import { prisma } from '@/config';
 import { Payment } from '@prisma/client';
 
-async function findPayments(userId: number) {
+async function findPayments(enrollmentId: number) {
   return prisma.payment.findUnique({
     where: {
-      userId
+      enrollmentId
     }
   })  
 }
 
 async function upsert(
-  userId: number,
+  enrollmentId: number,
   createdEnrollment: CreatePaymentParams,
   updatedEnrollment: UpdatePaymentParams,
 ) {
   return prisma.payment.upsert({
     where: {
-      userId,
+      enrollmentId,
     },
     create: createdEnrollment,
     update: updatedEnrollment,
   });
 }
 
-export type CreatePaymentParams = Omit<Payment, 'id' | 'createdAt' | 'updatedAt'>;
-export type UpdatePaymentParams = Omit<CreatePaymentParams, 'userId'>;
+export type CreatePaymentParams = Omit<Payment, 'id' | 'createdAt' | 'updatedAt' | 'userId'>;
+export type UpdatePaymentParams = Omit<CreatePaymentParams, 'enrollmentId'>;
 
 const paymentRepository = {
   upsert,
