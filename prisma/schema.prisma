@@ -18,7 +18,6 @@ model User {
   updatedAt  DateTime     @updatedAt
   Session    Session[]
   Enrollment Enrollment[]
-  Payment    Payment[]
 
   @@map("user")
 }
@@ -56,6 +55,7 @@ model Enrollment {
   userId    Int       @unique
   User      User      @relation(fields: [userId], references: [id])
   Address   Address[]
+  Payment   Payment[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 
@@ -80,19 +80,14 @@ model Address {
 }
 
 model Payment {
-  id         Int          @id @default(autoincrement())
-  Modality   ModalityType
-  Booking    Boolean      @default(false)
-  isFinished Boolean      @default(false)
-  userId     Int          @unique
-  User       User         @relation(fields: [userId], references: [id])
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
+  id           Int        @id @default(autoincrement())
+  Modality     Boolean    @default(false)
+  Booking      Boolean    @default(false)
+  isFinished   Boolean    @default(false)
+  enrollmentId Int        @unique
+  Enrollment   Enrollment @relation(fields: [enrollmentId], references: [id])
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
 
   @@map("payment")
-}
-
-enum ModalityType {
-  Presencial
-  Online
 }
