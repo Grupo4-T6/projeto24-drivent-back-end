@@ -7,7 +7,6 @@ export async function getEnrollmentByUser(req: AuthenticatedRequest, res: Respon
   const { userId } = req;
 
   const enrollmentWithAddress = await enrollmentsService.getOneWithAddressByUserId(userId);
-
   return res.status(httpStatus.OK).send(enrollmentWithAddress);
 }
 
