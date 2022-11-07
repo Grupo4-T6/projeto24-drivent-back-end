@@ -18,6 +18,7 @@ model User {
   updatedAt  DateTime     @updatedAt
   Session    Session[]
   Enrollment Enrollment[]
+  Payment    Payment[]
 
   @@map("user")
 }
@@ -72,22 +73,24 @@ model Address {
   neighborhood  String     @db.VarChar(255)
   addressDetail String?    @db.VarChar(255)
   enrollmentId  Int        @unique
-  Enrollment    Enrollment @relation(fields: [enrollmentId], references: [id])
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
+  Enrollment    Enrollment @relation(fields: [enrollmentId], references: [id])
 
   @@map("address")
 }
 
 model Payment {
-  id           Int        @id @default(autoincrement())
-  Modality     Boolean    @default(false)
-  Booking      Boolean    @default(false)
-  isFinished   Boolean    @default(false)
-  enrollmentId Int        @unique
-  Enrollment   Enrollment @relation(fields: [enrollmentId], references: [id])
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  id           Int         @id @default(autoincrement())
+  Modality     Boolean     @default(false)
+  Booking      Boolean     @default(false)
+  isFinished   Boolean     @default(false)
+  userId       Int         @unique
+  User         User        @relation(fields: [userId], references: [id])
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  Enrollment   Enrollment? @relation(fields: [enrollmentId], references: [id])
+  enrollmentId Int?
 
   @@map("payment")
 }

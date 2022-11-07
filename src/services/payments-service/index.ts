@@ -1,26 +1,20 @@
 import { notFoundError } from '@/errors';
-import enrollmentRepository from '@/repositories/enrollment-repository';
-import paymentRepository, { CreatePaymentParams } from '@/repositories/payment-repository';
+import paymentRepository from '@/repositories/payment-repository';
+import { Payment } from '@prisma/client'
 import { exclude } from '@/utils/prisma-utils';
 
-async function createOrUpdatePaymentWithUserId(params: CreatePaymentParams) {
-  const payment = params;
+type PaymentCreate = Omit<Payment, 'id'>
 
-  const newPayment = await paymentRepository.upsert(params.enrollmentId, payment, exclude(payment, 'enrollmentId'));
-
-  await  paymentRepository.upsert(payment.enrollmentId, payment , newPayment);
+async function createOrUpdatePaymentWithUserId(params: PaymentCreate) {
+  return await paymentRepository.upsert(params.userId, params, exclude(params, "userID"))
 }
 
 async function getPayments(userId: number) {
-  if(!userId) throw notFoundError();
-  const enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
-  if(!enrollment) throw notFoundError();
-  const payment = await paymentRepository.findPayments(enrollment.id);
-  if(!payment) throw notFoundError();
-  return payment;
+  if (!userId) throw notFoundError();
+  const purchase = await paymentRepository.find(userId);
+  if (!purchase) throw notFoundError();
+  return purchase;
 }
-
-export type createOrUpdatePaymentWithUserId = CreatePaymentParams;
 
 const paymentsService = {
   createOrUpdatePaymentWithUserId,
