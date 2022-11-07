@@ -1,130 +1,335 @@
-# drivent-back
+<!-- Generic template -->
 
-Back-end for Driven.t, an event management solution.
+<br />
+<div align="center">
+  <a href="https://github.com/Grupo4-T6/projeto24-drivent-back-end">
+   <img src="https://files.driveneducation.com.br/images/logo-rounded.png" width= 80/>
+  </a>
 
-## About
+<h3 align="center">Drivent</h3>
+  <h6>Work In Progress</h6>
+  <p>
+    Drivent API back-end .
+    <br />
+    <a href="https://github.com/Grupo4-T6/projeto24-drivent-front-end"><strong>Browse front-end code»</strong></a>
+</div>
 
-Driven.t is a web browser application with which you can manage every single aspect of your event.
+<div align="center">
+  <h3>Built With</h3>
+    <img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white" height="30px"/>
+    <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" height="30px"/>
+    <img src="https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white" height="30px"/>
+    <img src="https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white" height="30px"/>  
+    <img src="https://img.shields.io/badge/Express.js-404D59?style=for-the-badge&logo=express.js&logoColor=white" height="30px"/>
+    <img src="https://img.shields.io/badge/JWT-323330?style=for-the-badge&logo=json-web-tokens&logoColor=pink" height="30px"/>
+    <img src="https://img.shields.io/badge/JEST-207AFC?style=for-the-badge&logo=jest&logoColor=green" height="30px"/>
 
-## How to run for development
+  <!-- Badges source: https://dev.to/envoy_/150-badges-for-github-pnk -->
+</div>
 
-1. Clone this repository
-2. Install all dependencies
+</br>
 
-```bash
-npm i
-```
+<div align="center">
 
-3. Create a PostgreSQL database with whatever name you want
-4. Configure the `.env.development` file using the `.env.example` file (see "Running application locally or inside docker section" for details)
-5. Run all migrations
+<!-- [![Jest Coverage](https://github.com/NivaldoFarias/sing-me-a-song-tests/actions/workflows/jest.yml/badge.svg?branch=main)](https://github.com/NivaldoFarias/sing-me-a-song-tests/actions/workflows/jest.yml) -->
 
-```bash
-npm run migration:run
-```
+</div>
 
-6. Seed db
+<!-- Table of Contents -->
 
-```bash
-npm run dev:seed
-```
+# Table of Contents
 
-6. Run the back-end in a development environment:
+- [Installation and Usage](#installation-and-usage)
+- [Middlewares](#middlewares)
+- [API Reference](#api-reference)
+  - [Models](#models)
+  - [Routes](#routes)
+  - [Items](#items)
 
-```bash
-npm run dev
-```
+<!-- Installation and Usage -->
 
-## How to run tests
+## Installation and Usage
 
-1. Follow the steps in the last section
-1. Configure the `.env.test` file using the `.env.example` file (see "Running application locally or inside docker" section for details)
-1. Run all migrations
+###### Pre-requisites: Node.js `^16.14.0`, PostgreSQL `^12.11`
 
-```bash
-npm run migration:run
-```
-
-3. Run test:
-   (locally)
-
-```bash
-npm run test
-```
-
-(docker)
-
-```bash
-npm run test:docker
-```
-
-## Building and starting for production
+There are two available options for you to use this template for your next Back End project: either use Github's built-in `Code` feature (green button left of the _'About'_ section), or download the zip file and extract it in the root of a new project folder by running these commands:
 
 ```bash
-npm run build
-npm start
+git clone https://github.com/Grupo4-T6/projeto24-drivent-back-end.git
 ```
 
-## Running migrations or generate prisma clients
-
-Before running migrations make sure you have a postgres db running based on `.env.development` or `.env.test` file for each environment. You can start a postgres instance by typing `npm run dev:postgres` or `npm run test:postgres`. The host name is the name of the postgres container inside docker-compose file if you are running the application inside a docker container or localhost if you are running it locally.
-
-You can operate on databases for different environments, but it is necessary to populate correct env variables for each environment first, so in order to perform db operations type the following commands:
-
-- `npm run dev:migration:run` - run migrations for development environment by loading envs from .env.development file. It uses [dotenv-cli](https://github.com/entropitor/dotenv-cli#readme) to load envs from .env.development file.
-- `npm run test:migration:run` - the same, but for test environment
-
-- `npm run dev:migration:generate -- --name ATOMIC_OPERATION_NAME` - generate and run migration and prisma client for development environment by loading envs from .env.development file. Replace `ATOMIC_OPERATION_NAME` by the name of the migration you want to generate.
-
-## Switching between environments
-
-In order to switch between development and test environments you need to shutdown the current postgres instance if it is running and start the new one.
-
-If you are in development environment:
+Then run the following command to install the project's dependencies:
 
 ```bash
-npm run dev:postgres:down
+npm install //OBS: you'll need to do this in both folders.
 ```
-
-And then
+These are the back end commands that you'll need to know:
 
 ```bash
-npm run test:postgres
+npm run build              // create the project build
+npm run start              // run the project, not recommended since you'll need also have to change all the import directories
+npm run dev                // recommended way to run the project
+npm run prisma:reset       // reset the prisma database
+npm run prisma:migrate     // migrate the prisma database, you should do this after the npm install
+npm run prisma:prod        // starts prisma build production process, do this if you want to make a deploy 
+npm run prisma:test        // resets the database in order to make the tests more accurate
+npm run prisma:seed        // start the seeding process, create data in the database
+npm run test               // resets the database in order to make the tests more accurate
+npm run test:unit          // starts the testing process
 ```
 
-If you are in test environment:
+<!-- Middlewares -->
 
-```bash
-npm run test:postgres:down
+## Middlewares
+
+While aiming to provide a reusable, modular and extensible architecture, the middlewares are generally the first structures to be refactored into self-contained modules. The `errorHandlerMiddleware()`, `validateSchemaMiddleware()` middlewares were set in order to achieve that goal. The following section describes **`useMiddleware()`**, which incorporates the forementioned functions as _key–value_ pairs in an Object, along with their structure and usage.
+
+# API Reference
+
+In this section, you will find the example API's endpoints and their respective descriptions, along with the request and response examples, as well as the [Prisma](https://www.prisma.io/) models for each entity, that can be used as guide for data formatting. All data is sent and received as JSON.
+
+<!-- Models -->
+
+## Models
+
+### User model _`User`_
+
+- 
+
+### Session model _`Session`_
+
+- 
+
+### Event model _`Event`_
+
+- 
+
+
+### Enrollment model _`Enrollment`_
+
+- 
+
+
+### Address model _`Address`_
+
+-
+
+
+### Hotel model _`Hotel`_
+
+- 
+
+
+### HotelRooms model _`HotelRooms`_
+
+- 
+
+
+### Activities model _`Activities`_
+
+- 
+
+
+## Routes
+
+### [User](#items) _`/sign-in`_
+
+- [Sign-in](#---post-and-get)
+
+###### &nbsp; &nbsp; POST _`/sign-in`_
+
+<!-- ### &nbsp; ☰ &nbsp; Request
+
+###### Body
+
+```json
+{
+        "name": "Lorem ipsum",
+        "youtubeLink": "www.youtube.com/seu-link",
+}
 ```
 
-And then
+###### Headers
 
-```bash
-npm run dev:postgres
+```json
+{
+  "Content-Type": "application/json"
+}
 ```
 
-## Running application locally or inside docker
+### &nbsp; ☰ &nbsp; Responses
 
-`.env.development` and `.env.test` must be changed if you and to run the application locally or inside docker. You can populate files based on `.env.example` file, but you need to consider the following:
+| Status Code |       Description       |         Properties         |
+| :---------: | :---------------------: | :------------------------: |
+|   **201**   |         Created         |         `data: {}`         |
+|   **409**   | Item already registered | `error: { type, message }` |
+|   **422**   |      Invalid Input      | `error: { type, message }` |
+|   **500**   |  Internal Server Error  | `error: { type, message }` |
 
-- Running application locally (postgres and node):
+###### &nbsp; &nbsp; POST _`/recommendations/:id/downvote`_
 
-Add your postgres credentials and make sure to create given database before running the application.
+### &nbsp; ☰ &nbsp; Request
 
-- Running application inside docker (postgres and node):
+###### Body
 
-Set `POSTGRES_HOST` to `drivent-postgres-development` for `.env.development` and `drivent-postgres-test` for `.env.test` file. It is the name of the postgres container inside docker-compose file. Docker Compose will start the postgres container for you, create the database and host alias for you.
+```json
+{
+      //empty
+}
+```
 
-- Running application locally (node) but postgres is running inside docker:
+###### Headers
 
-Set `POSTGRES_HOST` to `localhost` for `.env.development` and `localhost` for `.env.test` file. Docker compose is configured to expose postgres container to your localhost.
+```json
+{
+  "Content-Type": "application/json"
+}
+```
 
-## What to do when add new ENV VARIABLES
+### &nbsp; ☰ &nbsp; Responses
 
-There are several things you need to do when you add new ENV VARIABLES:
-- Add them to `.env.example` file
-- Add them to your local `.env.development` and `.env.test` files
-- Add them to your docker-compose.yml file (just the name, not the value). Only envs listed in the environment section will be exposed to your docker container.
-- Add them (prod version) to your github repo secrets. They will be used to generate the `.env` file on deploy.
-- Add them (prod version) to test.yml file on .github/workflows/test.yml.
+| Status Code |       Description       |         Properties         |
+| :---------: | :---------------------: | :------------------------: |
+|   **200**   |         Created         |         `data: {}`         |
+|   **404**   | Item already registered | `error: { type, message }` |
+|   **500**   |  Internal Server Error  | `error: { type, message }` |
+
+###### &nbsp; &nbsp; POST _`/recommendations/:id/upvote`_
+
+### &nbsp; ☰ &nbsp; Request
+
+###### Body
+
+```json
+{
+      //empty
+}
+```
+
+###### Headers
+
+```json
+{
+  "Content-Type": "application/json"
+}
+```
+
+### &nbsp; ☰ &nbsp; Responses
+
+| Status Code |       Description       |         Properties         |
+| :---------: | :---------------------: | :------------------------: |
+|   **200**   |         Created         |         `data: {}`         |
+|   **404**   | Item already registered | `error: { type, message }` |
+|   **500**   |  Internal Server Error  | `error: { type, message }` |
+
+###### &nbsp; &nbsp; GET _`/recommendations/`_
+
+### &nbsp; ☰ &nbsp; Request
+
+###### Body
+
+```json
+{
+  //empty
+}
+```
+
+###### Headers
+
+```json
+{
+  "Content-Type": "application/json"
+}
+```
+
+### &nbsp; ☰ &nbsp; Responses
+
+| Status Code |      Description      |          Properties           |
+| :---------: | :-------------------: | :---------------------------: |
+|   **200**   |          OK           | `data: {  recommendations  }` |
+|   **500**   | Internal Server Error |  `error: { type, message }`   |
+
+###### &nbsp; &nbsp; GET _`/recommendations/:id`_
+
+### &nbsp; ☰ &nbsp; Request
+
+###### Body
+
+```json
+{
+  //empty
+}
+```
+
+###### Headers
+
+```json
+{
+  "Content-Type": "application/json"
+}
+```
+
+### &nbsp; ☰ &nbsp; Responses
+
+| Status Code |      Description      |          Properties          |
+| :---------: | :-------------------: | :--------------------------: |
+|   **200**   |          OK           | `data: {  recommendation  }` |
+|   **404**   |    Item not found     |  `error: { type, message }`  |
+|   **500**   | Internal Server Error |  `error: { type, message }`  |
+
+###### &nbsp; &nbsp; GET _`/recommendations/random`_
+
+### &nbsp; ☰ &nbsp; Request
+
+###### Body
+
+```json
+{
+  //empty
+}
+```
+
+###### Headers
+
+```json
+{
+  "Content-Type": "application/json"
+}
+```
+
+### &nbsp; ☰ &nbsp; Responses
+
+| Status Code |      Description      |          Properties          |
+| :---------: | :-------------------: | :--------------------------: |
+|   **200**   |          OK           | `data: {  recommendation  }` |
+|   **404**   |    Item not found     |  `error: { type, message }`  |
+|   **500**   | Internal Server Error |  `error: { type, message }`  |
+
+###### &nbsp; &nbsp; GET _`/recommendations/top/:amount`_
+
+### &nbsp; ☰ &nbsp; Request
+
+###### Body
+
+```json
+{
+  //empty
+}
+```
+
+###### Headers
+
+```json
+{
+  "Content-Type": "application/json"
+}
+```
+
+### &nbsp; ☰ &nbsp; Responses
+
+| Status Code |      Description      |          Properties           |
+| :---------: | :-------------------: | :---------------------------: |
+|   **200**   |          OK           | `data: {  recommendations  }` |
+|   **500**   | Internal Server Error |  `error: { type, message }`   | -->
+
+#
