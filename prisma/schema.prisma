@@ -18,6 +18,9 @@ model User {
   updatedAt  DateTime     @updatedAt
   Session    Session[]
   Enrollment Enrollment[]
+  Payment    Payment[]
+
+  @@map("user")
 }
 
 model Session {
@@ -27,6 +30,8 @@ model Session {
   token     String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@map("session")
 }
 
 model Event {
@@ -38,6 +43,8 @@ model Event {
   endsAt             DateTime
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
+
+  @@map("event")
 }
 
 model Enrollment {
@@ -51,6 +58,8 @@ model Enrollment {
   Address   Address[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+
+  @@map("enrollment")
 }
 
 model Address {
@@ -63,9 +72,25 @@ model Address {
   neighborhood  String     @db.VarChar(255)
   addressDetail String?    @db.VarChar(255)
   enrollmentId  Int        @unique
-  Enrollment    Enrollment @relation(fields: [enrollmentId], references: [id])
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
+  Enrollment    Enrollment @relation(fields: [enrollmentId], references: [id])
+
+  @@map("address")
+}
+
+model Payment {
+  id         Int      @id @default(autoincrement())
+  Modality   Boolean  @default(false)
+  Booking    Boolean  @default(false)
+  Total      Int
+  isFinished Boolean  @default(false)
+  userId     Int      @unique
+  User       User     @relation(fields: [userId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("payment")
 }
 
 model Hotel {
