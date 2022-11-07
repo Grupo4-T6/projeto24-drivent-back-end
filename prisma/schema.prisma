@@ -91,3 +91,24 @@ model Payment {
 
   @@map("payment")
 }
+
+model Hotel {
+  id         Int          @id @default(autoincrement())
+  name       String       @unique @db.VarChar(255)      
+  type       String       @db.VarChar(255)    
+  imageUrl   String       
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  HotelRooms HotelRooms []
+}
+
+model HotelRooms {
+  id            Int       @id @default(autoincrement())
+  hotelId       Int
+  Hotel         Hotel     @relation(fields: [hotelId], references: [id])
+  roomNumber    Int
+  maxOcupation  Int
+  spacesTaked   Int       @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
