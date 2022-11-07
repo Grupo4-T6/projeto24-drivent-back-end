@@ -18,6 +18,7 @@ async function main() {
 
   console.log({ event });
   await hotelSeed();
+  await activitySeed();
 }
 
 async function hotelSeed() {
@@ -96,6 +97,27 @@ async function hotelRoomSeed(hotelName: string, SingleRoons: number, DoubleRoons
       });
     }
   }
+}
+
+async function activitySeed() {
+  await prisma.activities.createMany({
+    data: [
+      { name: 'How to do set up a .env', activityType: 'MAIN', startsAt: '10:00', endsAt: '11:00', day: getDate(2) },
+      { name: 'How to centralize a css div', activityType: 'SIDE', startsAt: '10:00', endsAt: '17:00', day: getDate(2) },
+      { name: 'Introducing: OpenAI Dall-e Artificial Art API', activityType: 'WORKSHOP', startsAt: '10:00', endsAt: '11:00', day: getDate(2) },
+      { name: 'Generating Images programmatically on the edge', activityType: 'MAIN', startsAt: '10:00', endsAt: '11:00', day: getDate(3) },
+      { name: 'Time is relative even in JavaScript', activityType: 'SIDE', startsAt: '10:00', endsAt: '17:00', day: getDate(3) },
+      { name: '"I suck at programming, What Should I do?"', activityType: 'WORKSHOP', startsAt: '10:00', endsAt: '11:00', day: getDate(3) },
+      { name: "I'm lazy, what should I do?", activityType: 'MAIN', startsAt: '10:00', endsAt: '11:00', day: getDate(4) },
+      { name: 'Introducing: GO language', activityType: 'SIDE', startsAt: '10:00', endsAt: '17:00', day: getDate(4) },
+      { name: "Let's talk about: Burnout", activityType: 'WORKSHOP', startsAt: '10:00', endsAt: '11:00', day: getDate(4) }
+    ]
+  });
+}
+
+function getDate(n: number) {
+  const today = new Date();
+  return new Date(today.getFullYear(), today.getMonth(), today.getDate() + n);
 }
 
 main()
